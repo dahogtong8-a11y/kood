@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ขุดสู่แกนโลก</title>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#dfe3e6;--card:#f4f6f7;--ink:#1d2329;--mut:#5d6a74;--line:#c5cdd3;--acc:#f2a900;--ok:#1f7a4d;--onacc:#1d2329;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12171c;--card:#1c242b;--ink:#e9edf0;--mut:#8f9ca6;--line:#2e3942;--acc:#ffc21a;--ok:#4cc58a}}
+:root[data-theme="dark"]{--bg:#12171c;--card:#1c242b;--ink:#e9edf0;--mut:#8f9ca6;--line:#2e3942;--acc:#ffc21a;--ok:#4cc58a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.4 'Kanit','Noto Sans Thai',system-ui,sans-serif;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--card)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:11;display:flex;justify-content:space-between;align-items:center;padding:8px 14px;background:var(--card);border-bottom:2px solid var(--acc)}
+header b{font-size:24px}
+header small{color:var(--mut);font-size:14px}
+.wrap{max-width:960px;margin:0 auto;padding:12px}
+.grid{display:grid;gap:12px}
+@media(min-width:800px){.grid{grid-template-columns:1fr 1fr;align-items:start}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+#scene{position:relative;height:250px;border-radius:8px;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#fff;text-shadow:0 1px 4px #000b;cursor:pointer;user-select:none;-webkit-user-select:none;touch-action:manipulation;background-color:#8d6e4a;background-image:radial-gradient(rgba(0,0,0,.22) 2px,transparent 3px),radial-gradient(rgba(255,255,255,.16) 1.5px,transparent 2.5px);background-size:38px 38px,23px 23px;background-position:0 var(--y,0),9px var(--y,0)}
+#scene:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+#scene .top{position:absolute;top:8px;left:12px;right:12px;display:flex;justify-content:space-between;font-weight:600}
+#pick{font-size:88px;line-height:1;transform-origin:70% 80%;filter:drop-shadow(0 4px 6px #0008)}
+#pick.hit{animation:hit .12s}
+@keyframes hit{50%{transform:rotate(-40deg) scale(1.12)}}
+.hint{position:absolute;bottom:16px;width:100%;text-align:center;font-size:13px;opacity:.9}
+.blk{position:absolute;left:0;right:0;bottom:0;height:8px;background:#0007}
+.blk i{display:block;height:100%;width:0;background:#ffd23f}
+.fl{position:absolute;font-weight:600;font-size:20px;pointer-events:none;animation:up .8s ease-out forwards}
+@keyframes up{to{transform:translateY(-80px);opacity:0}}
+@media(prefers-reduced-motion:reduce){#pick.hit{animation:none}.fl{animation-duration:.01s}}
+#win{position:absolute;inset:0;background:#000c;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:16px;gap:6px;font-size:20px}
+#win[hidden]{display:none}
+.prog{height:18px;margin-top:12px;border-radius:4px;overflow:hidden;background:var(--line)}
+.prog i{display:block;height:100%;width:0;background:repeating-linear-gradient(-45deg,var(--acc) 0 8px,#1d2329 8px 16px)}
+.pl{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-top:4px}
+.st{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;text-align:center}
+.st div{background:var(--bg);border-radius:6px;padding:6px 2px;font-size:12px;color:var(--mut)}
+.st b{display:block;font-size:16px;color:var(--ink)}
+.sh{display:flex;justify-content:space-between;align-items:center}
+.bulk button{font:inherit;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:6px;padding:2px 10px;margin-left:4px;cursor:pointer}
+.bulk .on{background:var(--acc);color:var(--onacc);border-color:var(--acc)}
+h3{margin:14px 0 2px;font-size:14px;color:var(--mut);font-weight:600}
+.it{display:flex;align-items:center;gap:10px;width:100%;text-align:left;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin:6px 0;color:var(--ink);font:inherit;cursor:pointer}
+.it:focus-visible,.bulk button:focus-visible{outline:3px solid var(--acc);outline-offset:1px}
+.it .ic{font-size:26px}
+.it .nm{flex:1;min-width:0}
+.it .nm b{display:block}
+.it small{color:var(--mut)}
+.it .pr{text-align:right;white-space:nowrap;font-weight:600;color:var(--ok)}
+.it .pr span{display:block}
+.it .lv{font-weight:400;color:var(--mut);font-size:12px}
+.it.no{opacity:.6}
+.it.no .pr{color:var(--mut)}
+.it:active:not(.no){transform:scale(.98)}
+.foot{font-size:12px;color:var(--mut);text-align:center;margin:16px 0 0}
+.foot button{display:block;margin:8px auto 0;font:inherit;font-size:12px;border:1px solid var(--line);background:none;color:var(--mut);border-radius:6px;padding:4px 12px;cursor:pointer}
+#toast{position:fixed;left:0;right:0;bottom:0;z-index:20;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);text-align:center}
+#toast[hidden]{display:none}
+</style>
+</head>
+<body>
+<header><div>🪙 <b id="mon">0</b></div><small id="inc"></small></header>
+<div class="wrap">
+<div class="grid">
+<div class="card">
+ <div id="scene" role="button" tabindex="0" aria-label="แตะเพื่อขุด">
+  <div class="top"><span id="zone"></span><span id="depth"></span></div>
+  <div id="pick">⛏️</div><div class="hint">แตะเพื่อขุด</div>
+  <div class="blk"><i id="blk"></i></div>
+  <div id="win" hidden><b>🎉 ถึงแกนโลกแล้ว!</b><span id="wt"></span></div>
+ </div>
+ <div class="prog"><i id="prog"></i></div>
+ <div class="pl"><span>ผิวดิน</span><span id="pct"></span><span>แกนโลก</span></div>
+ <div class="st"><div><b id="s1"></b>ต่อการแตะ</div><div><b id="s2"></b>เครื่องจักร</div><div><b id="s3"></b>เหรียญ/เมตร</div></div>
+</div>
+<div class="card">
+ <div class="sh"><b>ร้านค้า</b><span class="bulk"><button data-b="1" class="on">×1</button><button data-b="10">×10</button><button data-b="0">MAX</button></span></div>
+ <div id="shop"></div>
+</div>
+</div>
+<p class="foot">เซฟอัตโนมัติในเบราว์เซอร์ ปิดหน้าไปเครื่องจักรก็ยังขุดต่อ (50% สูงสุด 4 ชั่วโมง)<button id="reset">รีเซ็ตเกม</button></p>
+</div>
+<div id="toast" hidden></div>
+<script>
+const $=id=>document.getElementById(id),GOAL=1e4,KEY='dig-core-v1';
+const Z=[[0,'ชั้นดิน','#8d6e4a'],[300,'หินปูน','#a09c8c'],[1200,'หินแกรนิต','#7f7683'],[2500,'แร่เหล็ก','#5f6b7c'],[4000,'ถ่านหิน','#44444c'],[5500,'ชั้นทองคำ','#b08a2a'],[7000,'คริสตัล','#4a76ad'],[8500,'เพชร','#3f9db3'],[9500,'แมกมา','#b83d1c']];
+const MD=[.5,4,32,256,2048,16384];
+// [กลุ่ม, ไอคอน, ชื่อ, คำอธิบาย, ราคาเริ่มต้น, ตัวคูณราคาต่อเลเวล, เลเวลสูงสุด]
+const IT=[
+['t','⛏️','จอบเหล็ก','แตะแรงขึ้น +1',10,1.16],
+['t','💎','หัวเจาะเพชร','แตะแรงขึ้น +12',600,1.18],
+['t','🔨','ค้อนไฮดรอลิก','แตะแรงขึ้น +160',3e4,1.2],
+['m','🪓','ค้อนเจาะ','ขุดเอง +0.5/วิ',15,1.15],
+['m','🔧','สว่านไฟฟ้า','ขุดเอง +4/วิ',300,1.15],
+['m','🚜','รถขุด','ขุดเอง +32/วิ',6e3,1.15],
+['m','🧨','ไดนาไมต์','ขุดเอง +256/วิ',13e4,1.15],
+['m','🚇','เครื่องเจาะอุโมงค์','ขุดเอง +2,048/วิ',28e5,1.15],
+['m','🔆','เลเซอร์ใต้ดิน','ขุดเอง +16,384/วิ',6e7,1.15],
+['u','🏭','เหล็กกล้า','เครื่องจักร +25% ต่อเลเวล',1e3,2.1,12],
+['u','🪙','แร่บริสุทธิ์','เหรียญ +30% ต่อเลเวล',600,1.9,12],
+['u','🤜','พลังมือ','แตะ +3% ของพลังเครื่องจักร',3e3,1.7,20],
+['u','🍀','ขุดโชคดี','แตะคริติคอล +3% (แรง ×6)',2e3,1.6,16]];
+const G={t:'🛠️ เครื่องมือ',m:'⚙️ เครื่องจักร (ขุดเอง)',u:'✨ อัปเกรด'};
+const SU=['','K','M','B','T','Qa','Qi','Sx'];
+const H=d=>4*Math.pow(1.0009,d),CPD=d=>.03+.47*Math.exp(-d/2500),V=d=>H(d)*CPD(d)*C.cm;
+function fmt(n){if(n<1e3)return n<10&&n%1?n.toFixed(1):''+Math.floor(n);const i=Math.min(Math.floor(Math.log10(n)/3),SU.length-1);return(n/Math.pow(1e3,i)).toFixed(2)+SU[i]}
+const fresh=()=>({m:0,d:0,f:0,L:IT.map(()=>0),t:Date.now(),pl:0});
+function load(){try{const j=JSON.parse(localStorage.getItem(KEY));if(j&&j.L&&j.L.length===IT.length)return j}catch(e){}return fresh()}
+function save(){S.t=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function calc(){const L=S.L;let m=0;for(let i=0;i<6;i++)m+=L[3+i]*MD[i];m*=1+.25*L[9];return{mach:m,tap:1+L[0]+12*L[1]+160*L[2]+m*.03*L[11],cm:1+.3*L[10],crit:.03*L[12]}}
+const zone=d=>{let z=Z[0];for(const q of Z)if(d>=q[0])z=q;return z};
+function dig(dmg){let g=0,n=0;while(dmg>0&&S.d<GOAL&&n++<2e4){const h=H(S.d),left=h*(1-S.f);if(dmg>=left){dmg-=left;g+=V(S.d);S.d++;S.f=0}else{S.f+=dmg/h;dmg=0}}S.m+=g;return g}
+function cost(i,n){const b=IT[i][4],g=IT[i][5];return Math.ceil(b*Math.pow(g,S.L[i])*(Math.pow(g,n)-1)/(g-1))}
+function cnt(i){const b=IT[i][4],g=IT[i][5],room=(IT[i][6]||1e9)-S.L[i];if(room<=0)return 0;if(bulk>0)return Math.min(bulk,room);const n=Math.floor(Math.log(1+S.m*(g-1)/(b*Math.pow(g,S.L[i])))/Math.log(g));return Math.max(1,Math.min(n,room))}
+function buy(i){const n=cnt(i);if(!n)return;const c=cost(i,n);if(S.m<c)return;S.m-=c;S.L[i]+=n;C=calc();ui()}
+function toast(t){const e=$('toast');e.textContent=t;e.hidden=false;setTimeout(()=>e.hidden=true,6000)}
+
+let S=load(),C=calc(),bulk=1,last=Date.now();
+const sc=$('scene'),E=[];
+(()=>{const shop=$('shop');let lg='';IT.forEach((it,i)=>{if(it[0]!==lg){lg=it[0];const h=document.createElement('h3');h.textContent=G[lg];shop.appendChild(h)}
+const b=document.createElement('button');b.className='it';
+b.innerHTML='<span class="ic">'+it[1]+'</span><span class="nm"><b>'+it[2]+'</b><small>'+it[3]+'</small></span><span class="pr"><span class="co"></span><span class="lv"></span></span>';
+b.onclick=()=>buy(i);shop.appendChild(b);E[i]={b,lv:b.querySelector('.lv'),co:b.querySelector('.co')}})})();
+
+function ui(){
+ const d=S.d,z=zone(d),p=(d+S.f)/GOAL*100;
+ $('zone').textContent=z[1];$('depth').textContent=d.toLocaleString()+' / 10,000 ม.';
+ sc.style.backgroundColor=z[2];sc.style.setProperty('--y',-(d+S.f)*6+'px');
+ $('blk').style.width=S.f*100+'%';$('prog').style.width=p+'%';$('pct').textContent=p.toFixed(2)+'%';
+ $('mon').textContent=fmt(S.m);$('inc').textContent='+'+fmt(C.mach*CPD(d)*C.cm)+' เหรียญ/วิ';
+ $('s1').textContent=fmt(C.tap);$('s2').textContent=fmt(C.mach)+'/วิ';$('s3').textContent=fmt(V(d));
+ const w=d>=GOAL;$('win').hidden=!w;if(w){const t=S.pl|0;$('wt').textContent='ใช้เวลาเล่น '+Math.floor(t/3600)+' ชม. '+Math.floor(t%3600/60)+' นาที'}
+ IT.forEach((_,i)=>{const n=cnt(i),e=E[i];e.lv.textContent='Lv '+S.L[i];if(!n){e.co.textContent='MAX';e.b.classList.add('no')}else{const c=cost(i,n);e.co.textContent='🪙 '+(n>1?'×'+n+' = ':'')+fmt(c);e.b.classList.toggle('no',S.m<c)}})
+}
+
+function tap(e){
+ if(S.d>=GOAL)return;
+ const cr=Math.random()<C.crit,dmg=C.tap*(cr?6:1);
+ dig(dmg);
+ const p=$('pick');p.classList.remove('hit');void p.offsetWidth;p.classList.add('hit');
+ if(sc.querySelectorAll('.fl').length<14){
+  const r=sc.getBoundingClientRect(),el=document.createElement('span');
+  el.className='fl';el.textContent=(cr?'💥 ':'+')+fmt(dmg);if(cr)el.style.color='#ffd23f';
+  el.style.left=(e.clientX!=null?e.clientX-r.left:r.width/2)-16+'px';
+  el.style.top=(e.clientY!=null?e.clientY-r.top:r.height/2)-30+'px';
+  el.onanimationend=()=>el.remove();sc.appendChild(el)}
+ ui();
+}
+sc.addEventListener('pointerdown',e=>{e.preventDefault();tap(e)});
+sc.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();tap({})}});
+document.querySelectorAll('.bulk button').forEach(b=>b.onclick=()=>{bulk=+b.dataset.b;document.querySelectorAll('.bulk button').forEach(x=>x.classList.toggle('on',x===b));ui()});
+let rc=0;$('reset').onclick=function(){if(!rc){this.textContent='แตะอีกครั้งเพื่อยืนยัน';rc=setTimeout(()=>{rc=0;this.textContent='รีเซ็ตเกม'},3000)}else{clearTimeout(rc);rc=0;this.textContent='รีเซ็ตเกม';S=fresh();C=calc();save();ui()}};
+
+const off=Math.min((Date.now()-S.t)/1000,14400);
+if(off>30&&C.mach>0&&S.d<GOAL){const m0=S.m,d0=S.d;dig(C.mach*off*.5);toast('ขณะไม่อยู่ ขุดลึกขึ้น '+(S.d-d0).toLocaleString()+' เมตร ได้เงิน '+fmt(S.m-m0)+' เหรียญ')}
+setInterval(()=>{const n=Date.now(),dt=Math.min((n-last)/1000,3600);last=n;if(S.d<GOAL){S.pl+=dt;if(C.mach>0)dig(C.mach*dt)}ui()},100);
+setInterval(save,5000);
+addEventListener('pagehide',save);
+document.addEventListener('visibilitychange',()=>{if(document.hidden)save()});
+ui();
+</script>
+</body>
+</html>
